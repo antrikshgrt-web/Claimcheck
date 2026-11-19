@@ -220,8 +220,11 @@ public class ClaimCheck {
 
   // ---------- HTTP server ----------
   interface Fn { Object run(Map<String, Object> body) throws Exception; }
-  static void send(HttpExchange x, int code, String type, String s) throws java.io.IOException {
-    byte[] d = s.getBytes(StandardCharsets.UTF_8); x.getResponseHeaders().set("Content-Type", type + "; charset=utf-8"); x.sendResponseHeaders(code, d.length); x.getResponseBody().write(d); x.close();
+    static void send(HttpExchange x, int code, String type, String s) throws java.io.IOException {
+    byte[] d = s.getBytes(StandardCharsets.UTF_8);
+    x.getResponseHeaders().set("Content-Type", type + "; charset=utf-8");
+    x.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+    x.sendResponseHeaders(code, d.length); x.getResponseBody().write(d); x.close();
   }
   static void api(HttpServer sv, String path, Fn f) {
     sv.createContext(path, x -> { try {
